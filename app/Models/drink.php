@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class drink extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'drink_name'
+    ];
+    
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'drink_id');
+    }
 }

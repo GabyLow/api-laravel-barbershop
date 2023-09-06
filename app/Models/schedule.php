@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class barber extends Model
+class schedule extends Model
 {
     protected $fillable = [
         'branch_id',
-        'barber_name'
+        'barber_id',
+        'schedule_date',
+        'start_time',
+        'end_time'
     ];
 
     public function branch()
@@ -16,8 +19,8 @@ class barber extends Model
         return $this->belongsTo(Branch::class, 'branch_id');
     }
 
-    public function appointments()
+    public function barber()
     {
-        return $this->hasMany(Appointment::class, 'barber_id');
+        return $this->belongsTo(barber::class, 'barber_id');
     }
 }

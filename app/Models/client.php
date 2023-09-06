@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class client extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'client_name',
         'birthday',
@@ -19,6 +16,6 @@ class client extends Model
 
     public function Appoint(){
 
-        return $this->hasMany(Appoint::class);
+        return $this->hasMany(Appointment::class, 'client_id');
     }
 }
