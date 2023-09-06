@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('client_name');
             $table->date('client_birthday');
             $table->string('client_phone');
-            $table->string('client_email');
+            $table->string('client_email')->unique();
             $table->string('status')->default('active')->nullable();
             $table->timestamps();
         });
