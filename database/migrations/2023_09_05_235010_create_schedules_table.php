@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('barbers', function (Blueprint $table) {
+        Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('branch_id');
-            $table->string('barber_name');
+            $table->unsignedBigInteger('barber_id');
+            $table->date('schedule_date');
+            $table->Time('start_time');
+            $table->Time('end_time');
+            $table->boolean('is_available')->default(true);
             $table->timestamps();
 
-            $table->foreign('branch_id')->references('id')->on('branches');
+            $table->foreign('barber_id')->references('id')->on('barbers');
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('barbers');
+        Schema::dropIfExists('schedules');
     }
 };
