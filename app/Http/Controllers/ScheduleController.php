@@ -4,72 +4,62 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Schedule;
-use App\Models\Client;
-use App\Models\Service;
 use App\Models\Barber;
 use App\Models\Branch;
-use App\Models\Drink;
-use App\Models\Music;
-// use Illuminate\Support\Facades\Mail;
-// use App\Mail\AppointmentConfirmation;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
     // Acción para mostrar fechas y horas disponibles
     public function getAvailableDates(Request $request)
     {
-        // Lógica para obtener fechas y horas disponibles en función de la sucursal, el servicio y el barbero seleccionados
-        // Puedes consultar la base de datos y retornar los datos necesarios en el formato adecuado
-    }
-
-    // Acción para registrar una nueva cita
-    public function createAppointment(Request $request)
-    {
         // Validar los datos del formulario
         $request->validate([
-            'client_name' => 'required|string',
-            'client_phone' => 'required|string',
-            'client_birthday' => 'required|date',
-            'client_email' => 'required|email',
             'branch_id' => 'required|exists:branches,id',
             'barber_id' => 'required|exists:barbers,id',
-            'schedule_date' => 'required|date',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'service_id' => 'required|exists:services,id',
-            'drink_id' => 'required|exists:drinks,id',
-            'music_id' => 'required|exists:music,id',
         ]);
 
-        // Crear una nueva cita en la base de datos
-        $appointment = new Schedule([
-            'branch_id' => $request->branch_id,
-            'barber_id' => $request->barber_id,
-            'schedule_date' => $request->schedule_date,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
-            'client_name' => $request->client_name,
-            'client_phone' => $request->client_phone,
-            'client_birthday' => $request->client_birthday,
-            'client_email' => $request->client_email,
-            'service_id' => $request->service_id,
-            'drink_id' => $request->drink_id,
-            'music_id' => $request->music_id,
-        ]);
+        // Obtener fechas y turnos disponibles en función de la sucursal y el barbero seleccionados
+        $branchId = $request->input('branch_id');
+        $barberId = $request->input('barber_id');
 
-        $appointment->save();
+        $availableDatesAndTimes = $this->calculateAvailableDatesAndTimes($branchId, $barberId);
 
-        // Calcular el costo total de los servicios (puedes hacerlo aquí)
-        $totalCost = 0; // Debes calcular esto
-
-        // Envía un correo de confirmación al cliente
-       // Mail::to($request->client_email)->send(new AppointmentConfirmation($appointment, $totalCost));
-
-        // Devuelve una respuesta de éxito
-        return response()->json(['message' => 'Cita registrada con éxito'], 201);
+        return response()->json(['available_dates_and_times' => $availableDatesAndTimes], 200);
     }
 
-    // Otras acciones relacionadas con la gestión de citas, notificaciones, etc.
+    private function calculateAvailableDatesAndTimes($branchId, $barberId)
+    {
+        // Obtener la fecha actual
+        $currentDate = Carbon::now();
 
+        // Inicializar un arreglo para almacenar las fechas y turnos disponibles
+        $availableDatesAndTimes = [];
+
+        // Iterar a través de los próximos días (por ejemplo, 7 días)
+        for ($i = 0; $i < 7; $i++) {
+            // Calcular la fecha para el día actual más $i días
+            $date = $currentDate->addDays($i)->format('Y-m-d');
+
+            // Aquí debes implementar la lógica para obtener los turnos disponibles para esta fecha
+            // Puedes consultar tu base de datos y obtener los turnos disponibles para la sucursal y el barbero seleccionados
+
+            // Ejemplo: Obtener los turnos disponibles para la fecha actual
+            $availableTimes = $this->getAvailableTimesForDate($branchId, $barberId, $date);
+
+            // Agregar la fecha y los turnos disponibles al arreglo
+            $availableDatesAndTimes[$date] = $availableTimes;
+        }
+
+        return $availableDatesAndTimes;
+    }
+
+    private function getAvailableTimesForDate($branchId, $barberId, $date)
+    {
+        // Implementa la lógica para obtener los turnos disponibles para la fecha, sucursal y barbero especificados
+        // Puedes consultar tu base de datos y obtener los turnos disponibles
+        // Devuelve un arreglo de turnos disponibles (por ejemplo, ['08:00 AM', '09:00 AM', ...])
+        // Asegúrate de considerar la duración de los servicios y otros factores relevantes
+        return [];
+    }
 }

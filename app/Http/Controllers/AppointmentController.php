@@ -40,21 +40,19 @@ class AppointmentController extends Controller
             'service_id' => $request->services,
             'drink_id' => $request->drink,
             'music_id' => $request->music,
-            'status' => 'pending', // Puede cambiar el estado según necesidades
+            'status' => 'pending',
         ]);
 
         $appointment->save();
 
-        // Calcular el costo total de los servicios (puedes hacerlo aquí)
-        $totalCost = 0; // Debes calcular esto
+        // Calcula el costo total de los servicios
+        $totalCost = 0; 
 
-        // Envía un correo de confirmación al cliente
-        // Aquí se agregar la lógica para enviar el correo
+
+        // Aquí se agrega la lógica para enviar el correo
 
         // Devuelve una respuesta de éxito
         return response()->json(['message' => 'Cita registrada con éxito'], 201);
     }
-
-    // Otras acciones relacionadas con la gestión de citas, notificaciones, etc.
 
 }
