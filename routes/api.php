@@ -64,3 +64,9 @@ Route::get('/schedules', [ScheduleController::class, 'index']); // Mostrar todas
 Route::get('/schedules/{id}', [ScheduleController::class, 'show']); // Mostrar una cita específica
 Route::put('/schedules/{id}', [ScheduleController::class, 'update']); // Actualizar una cita
 Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']); // Eliminar una cita
+
+// Rutas para Appointments
+Route::get('/appointments', [AppointmentController::class, 'index']); // Mostrar todas las citas
+Route::get('/appointments/{id}', [AppointmentController::class, 'show']); // Mostrar una cita específica
+Route::put('/appointments/{id}', [AppointmentController::class, 'update']); // Actualizar una cita
+Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']); // Eliminar una cita

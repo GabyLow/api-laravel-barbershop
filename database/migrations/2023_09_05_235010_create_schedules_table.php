@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('barber_id')->references('id')->on('barbers');
+            $table->foreign('branch_id')->references('id')->on('branches');
         });
     }
 
