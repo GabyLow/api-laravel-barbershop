@@ -57,17 +57,16 @@ Route::post('/music',[MusicController::class, 'store']);
 Route::put('/music/{id}',[MusicController::class, 'update']);
 Route::get('/music/all',[MusicController::class, 'showAll']);
 
-//schedule 
 
 Route::get('/schedules/available-dates', [ScheduleController::class, 'getAvailableDates']); //Esta ruta (FUNCION) se utiliza para obtener fechas y horas disponibles en función de la sucursal, el servicio y el barbero seleccionados.
 Route::post('/schedule/create-appointment', [ScheduleController::class, 'createAppointment']); //createAppointment: Esta ruta se utiliza para crear una nueva cita en la base de datos
-Route::get('/schedules', [ScheduleController::class, 'index']); // Mostrar todas las citas
-Route::get('/schedules/{id}', [ScheduleController::class, 'show']); // Mostrar una cita específica
-Route::put('/schedules/{id}', [ScheduleController::class, 'update']); // Actualizar una cita
-Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']); // Eliminar una cita
+Route::get('/schedules', [ScheduleController::class, 'index']); // Muestre todas las citas
+Route::get('/schedules/{id}', [ScheduleController::class, 'show']); // Muestra una cita específica
+Route::put('/schedules/{id}', [ScheduleController::class, 'update']); // Actualiza una cita
+Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']); // Elimina una cita
 
-// Rutas para Appointments
-Route::get('/appointments', [AppointmentController::class, 'index']); // Mostrar todas las citas
-Route::get('/appointments/{id}', [AppointmentController::class, 'show']); // Mostrar una cita específica
-Route::put('/appointments/{id}', [AppointmentController::class, 'update']); // Actualizar una cita
-Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']); // Eliminar una cita
+
+Route::get('/appointments', [AppointmentController::class, 'index']); // Muestra todas las citas
+Route::get('/appointments/{id}', [AppointmentController::class, 'show']); // Muestra una cita específica
+Route::put('/appointments/{id}', [AppointmentController::class, 'update']); // Actualiza una cita
+Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']); // Elimina una cita

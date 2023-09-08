@@ -32,9 +32,20 @@ class AppointmentController extends Controller
             'music' => 'required|exists:music,id',
         ]);
 
+            // Busca o crea un cliente basado en el correo electrónico proporcionado
+    $client = Client::firstOrCreate(
+        ['client_email' => $request->email],
+        [
+            'client_name' => $request->client_name,
+            'client_phone' => $request->client_phone,
+            'client_birthday' => $request->client_birthday,
+            // Agrega otros campos del cliente si es necesario
+        ]
+    );
+
         // Crear una nueva cita en la base de datos
         $appointment = new Appointment([
-            'client_id' => 1, // Reemplaza con la lógica para obtener el ID del cliente
+            'client_id' => $client->id, // Reemplaza con la lógica para obtener el ID del cliente
             'appointment_date' => $request->schedule_date . ' ' . $request->selectedTime,
             'barber_id' => $request->barber,
             'service_id' => $request->services,
