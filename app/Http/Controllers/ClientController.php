@@ -3,43 +3,73 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\client;
+use App\Models\Client;
 
 class ClientController extends Controller
 {
     public function index()
     {
-        $clients = client::all();
-        return response()->json($clients, 200);
+        // Muestra la lista de clientes
+        $clients = Client::all();
+        return view('clients.index', compact('clients'));
+    }
+
+    public function create()
+    {
+        // Muestra el formulario para crear un nuevo cliente
+        return view('clients.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        // Almacena un nuevo cliente en la base de datos
+        $data = $request->validate([
             'client_name' => 'required|string',
-            'client_phone' => 'required|string',
             'client_birthday' => 'required|date',
-            'client_email' => 'required|email|unique:clients,client_email',
+            'client_phone' => 'required|string',
+            'client_email' => 'required|email|unique:clients',
+            'status' => 'nullable|string',
         ]);
 
-        $client = Client::create($request->all());
+        Client::create($data);
 
-        return response()->json($client, 201);
+        return redirect()->route('clients.index');
     }
 
-    public function update(Request $request, string $id)
+    public function show(Client $client)
     {
-        $client = Client::findOrFail($id);
+        // Muestra los detalles de un cliente específico
+        return view('clients.show', compact('client'));
+    }
 
-        $request->validate([
+    public function edit(Client $client)
+    {
+        // Muestra el formulario de edición de un cliente
+        return view('clients.edit', compact('client'));
+    }
+
+    public function update(Request $request, Client $client)
+    {
+        // Actualiza un cliente existente en la base de datos
+        $data = $request->validate([
             'client_name' => 'required|string',
-            'client_phone' => 'required|string',
             'client_birthday' => 'required|date',
+            'client_phone' => 'required|string',
             'client_email' => 'required|email|unique:clients,client_email,' . $client->id,
+            'status' => 'nullable|string',
         ]);
 
-        $client->update($request->all());
+        $client->update($data);
 
-        return response()->json($client, 200);
+        return redirect()->route('clients.index');
+    }
+
+    public function destroy(Client $client)
+    {
+        // Elimina un cliente de la base de datos
+        $client->delete();
+
+        return redirect()->route('clients.index');
     }
 }
+

@@ -2,68 +2,92 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
-use App\Models\Appointment;
-use App\Models\Client;
-use App\Models\Service;
-use App\Models\Barber;
 use App\Models\Branch;
+use App\Models\Barber;
+use App\Models\Service;
 use App\Models\Drink;
 use App\Models\Music;
-use Illuminate\Support\Facades\DB;
+use App\Models\Client;
+use App\Models\Appointment;
+use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
-    // Acción para registrar una nueva cita
-    public function createAppointment(Request $request)
+    // Vista para crear una nueva cita
+    public function create()
     {
-        // Valida los datos del formulario
-        $request->validate([
-            'name' => 'required|string',
-            'num_tel' => 'required|string',
-            'b_date' => 'required|date',
-            'email' => 'required|email',
-            'branch' => 'required|exists:branches,id',
-            'barber' => 'required|exists:barbers,id',
-            'schedule_date' => 'required|date',
-            'selectedTime' => 'required',
-            'services' => 'required|array|min:1', // Al menos un servicio debe estar seleccionado
-            'drink' => 'required|exists:drinks,id',
-            'music' => 'required|exists:music,id',
-        ]);
-
-            // Busca o crea un cliente basado en el correo electrónico proporcionado
-    $client = Client::firstOrCreate(
-        ['client_email' => $request->email],
-        [
-            'client_name' => $request->client_name,
-            'client_phone' => $request->client_phone,
-            'client_birthday' => $request->client_birthday,
-            // Agrega otros campos del cliente si es necesario
-        ]
-    );
-
-        // Crear una nueva cita en la base de datos
-        $appointment = new Appointment([
-            'client_id' => $client->id, // Reemplaza con la lógica para obtener el ID del cliente
-            'appointment_date' => $request->schedule_date . ' ' . $request->selectedTime,
-            'barber_id' => $request->barber,
-            'service_id' => $request->services,
-            'drink_id' => $request->drink,
-            'music_id' => $request->music,
-            'status' => 'pending',
-        ]);
-
-        $appointment->save();
-
-        // Calcula el costo total de los servicios
-        $totalCost = 0; 
-
-
-        // Aquí se agrega la lógica para enviar el correo
-
-        // Devuelve una respuesta de éxito
-        return response()->json(['message' => 'Cita registrada con éxito'], 201);
+        $branches = Branch::all();
+        $barbers = Barber::all();
+        $services = Service::all();
+        $drinks = Drink::all();
+        $music = Music::all();
+        $clients = Client::all(); // Agrega esta línea para obtener la lista de clientes
+    
+        return view('appointment-form', compact('branches', 'barbers', 'services', 'drinks', 'music', 'clients'));
     }
 
+    // Procesar la solicitud de reserva de cita
+    public function store(Request $request)
+    {
+        // Validación de datos
+        $request->validate([
+            'client_name' => 'required|string',
+            'client_phone' => 'required|string',
+            'client_birthday' => 'required|date',
+            'client_email' => 'required|email',
+            'branch_id' => 'required|exists:branches,id',
+            'barber_id' => 'required|exists:barbers,id',
+            'appointment_date' => 'required|date',
+            'selected_time' => 'required',
+            'services' => 'required|array|min:1',
+            'drink_id' => 'required|exists:drinks,id',
+            'music_id' => 'required|exists:music,id',
+        ]);
+
+        // Buscar o crear un cliente basado en el correo electrónico proporcionado
+        $client = Client::firstOrCreate(
+            ['client_email' => $request->client_email],
+            [
+                'client_name' => $request->client_name,
+                'client_phone' => $request->client_phone,
+                'client_birthday' => $request->client_birthday,
+            ]
+        );
+
+ // Calcular la duración total y el costo total de la cita
+ $selectedServices = Service::whereIn('id', $request->services)->get();
+ $totalDuration = $selectedServices->sum('duration');
+ $totalCost = $selectedServices->sum('total_cost');
+
+ // Crear una nueva cita en la base de datos
+ $appointment = new Appointment([
+     'client_id' => $client->id,
+     'start_time' => $request->appointment_date . ' ' . $request->selected_time, // Hora de inicio
+     'end_time' => Carbon::parse($request->appointment_date . ' ' . $request->selected_time)->addMinutes($totalDuration), // Hora de finalización calculada a partir de la duración
+     'duration' => $totalDuration, // Duración total calculada
+     'total_cost' => $totalCost, // Costo total calculado
+     'branch_id' => $request->branch_id,
+     'barber_id' => $request->barber_id,
+     'drink_id' => $request->drink_id,
+     'music_id' => $request->music_id,
+     'status' => 'pending',
+ ]);
+
+ $appointment->save();
+
+ if (!$appointment->save()) {
+    // Manejo del error, como registrar el mensaje de error
+    dd('Error al guardar la cita: ' . $appointment->getError());
 }
+
+
+        // Asociar servicios seleccionados con la cita
+        $appointment->services()->attach($request->services);
+
+        // Redirigir a una página de éxito o mostrar un mensaje de éxito
+        return redirect()->route('appointment-form')->with('success', 'Cita registrada con éxito');
+    }
+}
+

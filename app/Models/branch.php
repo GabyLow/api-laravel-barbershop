@@ -12,7 +12,7 @@ class branch extends Model
         'branch_phone'
     ];
 
-    public function Appoint()
+    public function barbers()
     {
         return $this->hasMany(barber::class, 'id_branch');
     }
