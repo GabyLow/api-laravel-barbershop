@@ -3,27 +3,45 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BarberController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\DrinkController;
+use App\Http\Controllers\MusicController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
-Route::get('/', [ClientController::class, 'index']);
+// Rutas para "clients"
+Route::get('clients', [ClientController::class, 'index']);
 Route::resource('clients', ClientController::class);
 
-Route::get('/appointment-form', function () {
-    return view('appointment-form');
-})->name('appointment-form');
-
-Route::get('/appointment-form', [AppointmentController::class, 'create'])->name('appointment-form');
+Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
 Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+Route::get('/appointments/{appointment}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
+Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
+Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+
+// Rutas para "branches"
+Route::resource('branches', BranchController::class);
+
+// Rutas para "barbers"
+Route::resource('barbers', BarberController::class);
+
+// Rutas para "services"
+Route::resource('services', ServiceController::class);
+
+// Rutas para "schedules"
+Route::resource('schedules', ScheduleController::class);
+
+// Rutas para "drinks"
+Route::resource('drinks', DrinkController::class);
+
+// Rutas para "music"
+Route::resource('music', MusicController::class);
 
 
 

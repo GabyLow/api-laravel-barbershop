@@ -9,8 +9,8 @@ class MusicController extends Controller
 {
     public function index()
     {
-        $musics = Music::all();
-        return response()->json($musics, 200);
+        $music = Music::all();
+        return view('music', compact('music'));
     }
 
     public function store(Request $request)

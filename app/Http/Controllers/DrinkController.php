@@ -10,7 +10,7 @@ class DrinkController extends Controller
     public function index()
     {
         $drinks = Drink::all();
-        return response()->json($drinks, 200);
+        return view('drinks', compact('drinks'));
     }
 
     public function store(Request $request)

@@ -3,7 +3,13 @@
 @section('content')
     <h1>Reservar una Cita</h1>
 
-    <form action="{{ route('appointments.store') }}" method="POST">
+    <!-- Formulario para crear o actualizar citas -->
+    @if(isset($appointmentToEdit))
+        <form action="{{ route('appointments.update', $appointmentToEdit->id) }}" method="POST">
+            @method('PUT')
+    @else
+        <form action="{{ route('appointments.store') }}" method="POST">
+    @endif
         @csrf
 
         <!-- Paso 1: Información del Cliente (Seleccionar Cliente Existente) -->
@@ -18,7 +24,7 @@
             </select>
         </div>
 
-        <!-- Paso 2: Selección de Sucursal y Barbero -->
+        <!-- Paso 2: Selección de Sucursal y Paso 3: Selección de Barbero -->
         <h2>Paso 2: Selección de Sucursal y Paso 3: Selección de Barbero</h2>
         <div class="form-group">
             <label for="branch_id">Sucursal</label>
@@ -93,6 +99,41 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Reservar Cita</button>
+        <!-- Botón para crear o actualizar cita -->
+        <button type="submit" class="btn btn-primary">
+            @if(isset($appointmentToEdit))
+                Actualizar Cita
+            @else
+                Reservar Cita
+            @endif
+        </button>
     </form>
+
+    <!-- Lista de citas existentes -->
+    <h2>Lista de Citas</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <!-- Agrega encabezados para otras columnas de citas aquí -->
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($appointments as $appointment)
+                <tr>
+                    <td>{{ $appointment->id }}</td>
+                    <!-- Agrega columnas para otras propiedades de citas aquí -->
+                    <td>
+                        <a href="{{ route('appointments.edit', $appointment->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <form action="{{ route('appointments.destroy', $appointment->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cita?')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 @endsection

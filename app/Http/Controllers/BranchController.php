@@ -10,7 +10,7 @@ class BranchController extends Controller
     public function index()
     {
         $branches = Branch::all();
-        return response()->json($branches, 200);
+        return view('branches', compact('branches'));
     }
 
     public function store(Request $request)

@@ -10,7 +10,7 @@ class ServiceController extends Controller
     public function index()
     {
         $services = Service::all();
-        return response()->json($services, 200);
+        return view('services', compact('services'));
     }
 
     public function store(Request $request)

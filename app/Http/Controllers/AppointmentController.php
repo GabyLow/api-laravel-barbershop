@@ -15,18 +15,29 @@ use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
+
+    public function index()
+    {
+        $clients = Client::all(); // Obtener la lista de clientes
+        $appointments = Appointment::all();
+        return view('appointment-form', compact('clients', 'appointments'));
+    }
+
+
     // Vista para crear una nueva cita
     public function create()
-    {
-        $branches = Branch::all();
-        $barbers = Barber::all();
-        $services = Service::all();
-        $drinks = Drink::all();
-        $music = Music::all();
-        $clients = Client::all(); // Agrega esta línea para obtener la lista de clientes
+{
+    $clients = Client::all();
+    $branches = Branch::all();
+    $barbers = Barber::all();
+    $services = Service::all();
+    $drinks = Drink::all();
+    $music = Music::all();
+    $appointmentToEdit = null;
+
+    return view('appointment-form', compact('clients', 'branches', 'barbers', 'services', 'drinks', 'music', 'appointmentToEdit'));
+}
     
-        return view('appointment-form', compact('branches', 'barbers', 'services', 'drinks', 'music', 'clients'));
-    }
 
     // Procesar la solicitud de reserva de cita
     public function store(Request $request)
@@ -56,28 +67,32 @@ class AppointmentController extends Controller
             ]
         );
 
- // Calcular la duración total y el costo total de la cita
- $selectedServices = Service::whereIn('id', $request->services)->get();
- $totalDuration = $selectedServices->sum('duration');
- $totalCost = $selectedServices->sum('total_cost');
+// Calcular la duración total y el costo total de la cita
+$selectedServices = Service::whereIn('id', $request->services)->get();
+$totalDuration = $selectedServices->sum('duration');
+$totalCost = $selectedServices->sum('total_cost');
 
- // Crear una nueva cita en la base de datos
- $appointment = new Appointment([
-     'client_id' => $client->id,
-     'start_time' => $request->appointment_date . ' ' . $request->selected_time, // Hora de inicio
-     'end_time' => Carbon::parse($request->appointment_date . ' ' . $request->selected_time)->addMinutes($totalDuration), // Hora de finalización calculada a partir de la duración
-     'duration' => $totalDuration, // Duración total calculada
-     'total_cost' => $totalCost, // Costo total calculado
-     'branch_id' => $request->branch_id,
-     'barber_id' => $request->barber_id,
-     'drink_id' => $request->drink_id,
-     'music_id' => $request->music_id,
-     'status' => 'pending',
- ]);
+// Aquí es donde se obtiene el servicio seleccionado (por ejemplo, el primero de la lista)
+$selectedService = $selectedServices->first();
 
- $appointment->save();
+// Crear una nueva cita en la base de datos
+$appointment = new Appointment([
+    'client_id' => $client->id,
+    'branch_id' => $request->branch_id,
+    'barber_id' => $request->barber_id,
+    'service_id' => $selectedService->id, // Usar el servicio seleccionado
+    'drink_id' => $request->drink_id,
+    'music_id' => $request->music_id,
+    'start_time' => $request->appointment_date . ' ' . $request->selected_time,
+    'end_time' => Carbon::parse($request->appointment_date . ' ' . $request->selected_time)->addMinutes($selectedService->duration), // Calcular hora de finalización
+    'duration' => $selectedService->duration, // Duración total del servicio seleccionado
+    'total_cost' => $selectedService->service_price, // Costo total del servicio seleccionado
+    'status' => 'pending',
+]);
 
- if (!$appointment->save()) {
+$appointment->save();
+
+if (!$appointment->save()) {
     // Manejo del error, como registrar el mensaje de error
     dd('Error al guardar la cita: ' . $appointment->getError());
 }

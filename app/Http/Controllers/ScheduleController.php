@@ -10,6 +10,17 @@ use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
+    public function index()
+{
+    $schedules = Schedule::all();
+    $branches = Branch::all(); // Obtener todas las sucursales, ajusta esto según tu modelo Branch
+    $barbers = Barber::all(); // Obtener todos los barberos, ajusta esto según tu modelo Barber
+
+    return view('schedules', compact('schedules', 'branches', 'barbers'));
+}
+    
+    
+    
     // Acción para mostrar fechas y horas disponibles
     public function getAvailableDates(Request $request)
     {
@@ -56,10 +67,7 @@ class ScheduleController extends Controller
 
     private function getAvailableTimesForDate($branchId, $barberId, $date)
     {
-        // Implementa la lógica para obtener los turnos disponibles para la fecha, sucursal y barbero especificados
-        // Puedes consultar tu base de datos y obtener los turnos disponibles
-        // Devuelve un arreglo de turnos disponibles (por ejemplo, ['08:00 AM', '09:00 AM', ...])
-        // Asegúrate de considerar la duración de los servicios y otros factores relevantes
+
         return [];
     }
 }
