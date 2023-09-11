@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
-use App\Models\Branch;
-use App\Models\Barber;
-use App\Models\Service;
-use App\Models\Drink;
-use App\Models\Music;
-use App\Models\Client;
-use App\Models\Appointment;
+use App\Models\branch;
+use App\Models\barber;
+use App\Models\service;
+use App\Models\drink;
+use App\Models\music;
+use App\Models\client;
+use App\Models\appointment;
 use Carbon\Carbon;
 
 class AppointmentController extends Controller
@@ -18,21 +18,20 @@ class AppointmentController extends Controller
 
     public function index()
     {
-        $clients = Client::all(); // Obtener la lista de clientes
-        $appointments = Appointment::all();
-        return view('appointment-form', compact('clients', 'appointments'));
+        $appointments = Appointment::all(); // Obtener la lista de citas
+        return view('appointment-form', compact('appointments'));
     }
 
 
     // Vista para crear una nueva cita
     public function create()
     {
-        $clients = Client::all();
-        $branches = Branch::all();
-        $barbers = Barber::all();
-        $services = Service::all();
-        $drinks = Drink::all();
-        $music = Music::all();
+        $clients = client::all();
+        $branches = branch::all();
+        $barbers = barber::all();
+        $services = service::all();
+        $drinks = drink::all();
+        $music = music::all();
         $appointmentToEdit = null;
     
         // Obtener las citas existentes

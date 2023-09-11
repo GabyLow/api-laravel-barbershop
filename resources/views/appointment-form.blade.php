@@ -115,7 +115,7 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <!-- Agrega encabezados para otras columnas de citas aquí -->
+                <!-- Agregar encabezados para otras columnas de citas aquí -->
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -123,7 +123,7 @@
             @foreach ($appointments as $appointment)
                 <tr>
                     <td>{{ $appointment->id }}</td>
-                    <!-- Agrega columnas para otras propiedades de citas aquí -->
+                    <!-- Agregar columnas para otras propiedades de citas aquí -->
                     <td>
                         <a href="{{ route('appointments.edit', $appointment->id) }}" class="btn btn-warning btn-sm">Editar</a>
                         <form action="{{ route('appointments.destroy', $appointment->id) }}" method="POST" style="display: inline;">
@@ -137,3 +137,9 @@
         </tbody>
     </table>
 @endsection
+
+
+
+
+
+
