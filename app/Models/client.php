@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class client extends Model
+class Client extends Model
 {
     protected $fillable = [
         'client_name',
@@ -14,7 +14,7 @@ class client extends Model
         'status'
     ];
 
-    public function Appoint(){
+    public function appointments(){
 
         return $this->hasMany(Appointment::class, 'client_id');
     }

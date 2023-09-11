@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class schedule extends Model
+class Schedule extends Model
 {
     protected $fillable = [
         'branch_id',
@@ -21,6 +21,6 @@ class schedule extends Model
 
     public function barber()
     {
-        return $this->belongsTo(barber::class, 'barber_id');
+        return $this->belongsTo(Barber::class, 'barber_id');
     }
 }

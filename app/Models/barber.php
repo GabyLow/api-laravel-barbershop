@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class barber extends Model
+class Barber extends Model
 {
     protected $fillable = [
         'branch_id',

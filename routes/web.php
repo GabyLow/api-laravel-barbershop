@@ -14,7 +14,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-// Rutas para "clients"
+
 Route::get('clients', [ClientController::class, 'index']);
 Route::resource('clients', ClientController::class);
 
@@ -30,22 +30,22 @@ Route::get('/appointments/{appointment}/edit', [AppointmentController::class, 'e
 Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
 Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
 
-// Rutas para "branches"
+
 Route::resource('branches', BranchController::class);
 
-// Rutas para "barbers"
+
 Route::resource('barbers', BarberController::class);
 
-// Rutas para "services"
+
 Route::resource('services', ServiceController::class);
 
-// Rutas para "schedules"
+
 Route::resource('schedules', ScheduleController::class);
 
-// Rutas para "drinks"
+
 Route::resource('drinks', DrinkController::class);
 
-// Rutas para "music"
+
 Route::resource('music', MusicController::class);
 
 

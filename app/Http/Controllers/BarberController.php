@@ -22,13 +22,13 @@ class BarberController extends Controller
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'barber_name' => 'required|string',
-            // Agregar otras reglas de validación según tus necesidades
+            
         ]);
     
         // Crear un nuevo barbero
         $barber = Barber::create($request->all());
     
-        // Redirigir a la vista de listado de barberos
+        // Redirige a la vista de listado de barberos
         return redirect()->route('barbers.index');
     }
     
@@ -38,7 +38,7 @@ class BarberController extends Controller
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'barber_name' => 'required|string',
-            // Agregar otras reglas de validación según tus necesidades
+      
         ]);
     
         // Buscar el barbero por ID

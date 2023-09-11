@@ -12,16 +12,6 @@ use App\Http\Controllers\AppointmentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -58,15 +48,15 @@ Route::put('/music/{id}',[MusicController::class, 'update']);
 Route::get('/music/all',[MusicController::class, 'showAll']);
 
 
-Route::get('/schedules/available-dates', [ScheduleController::class, 'getAvailableDates']); //Esta ruta (FUNCION) se utiliza para obtener fechas y horas disponibles en función de la sucursal, el servicio y el barbero seleccionados.
-Route::post('/schedule/create-appointment', [ScheduleController::class, 'createAppointment']); //createAppointment: Esta ruta se utiliza para crear una nueva cita en la base de datos
-Route::get('/schedules', [ScheduleController::class, 'index']); // Muestre todas las citas
-Route::get('/schedules/{id}', [ScheduleController::class, 'show']); // Muestra una cita específica
-Route::put('/schedules/{id}', [ScheduleController::class, 'update']); // Actualiza una cita
-Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']); // Elimina una cita
+Route::get('/schedules/available-dates', [ScheduleController::class, 'getAvailableDates']); 
+Route::post('/schedule/create-appointment', [ScheduleController::class, 'createAppointment']); 
+Route::get('/schedules', [ScheduleController::class, 'index']);
+Route::get('/schedules/{id}', [ScheduleController::class, 'show']); 
+Route::put('/schedules/{id}', [ScheduleController::class, 'update']); 
+Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']); 
 
 
-Route::get('/appointments', [AppointmentController::class, 'index']); // Muestra todas las citas
-Route::get('/appointments/{id}', [AppointmentController::class, 'show']); // Muestra una cita específica
-Route::put('/appointments/{id}', [AppointmentController::class, 'update']); // Actualiza una cita
-Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']); // Elimina una cita
+Route::get('/appointments', [AppointmentController::class, 'index']); 
+Route::get('/appointments/{id}', [AppointmentController::class, 'show']); 
+Route::put('/appointments/{id}', [AppointmentController::class, 'update']); 
+Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']); 

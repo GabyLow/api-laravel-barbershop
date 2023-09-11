@@ -5,7 +5,7 @@
 
     <form action="{{ route('clients.update', $client->id) }}" method="POST">
         @csrf
-        @method('PUT') <!-- Utiliza el método PUT para actualizar el cliente -->
+        @method('PUT')
 
         <div class="form-group">
             <label for="client_name">Nombre</label>

@@ -25,7 +25,7 @@ class BranchController extends Controller
             'branch_name' => 'required|string',
             'branch_address' => 'required|string',
             'branch_phone' => 'required|string',
-            // Agregar otras reglas de validación según necesidades
+            
         ]);
 
         // Crear una nueva sucursal
@@ -49,13 +49,13 @@ class BranchController extends Controller
             'branch_name' => 'required|string',
             'branch_address' => 'required|string',
             'branch_phone' => 'required|string',
-            // Agregar otras reglas de validación según necesidades
+            
         ]);
 
-        // Busca la sucursal por ID
+      
         $branch = Branch::findOrFail($id);
 
-        // Actualiza la sucursal con los datos proporcionados
+       
         $branch->update($request->all());
 
         return redirect()->route('branches')->with('success', 'Sucursal actualizada con éxito');
@@ -63,7 +63,7 @@ class BranchController extends Controller
 
     public function destroy($id)
     {
-        // Busca la sucursal por ID y elimínala
+        
         $branch = Branch::findOrFail($id);
         $branch->delete();
 

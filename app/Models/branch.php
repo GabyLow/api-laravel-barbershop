@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class branch extends Model
+class Branch extends Model
 {
     protected $fillable = [
         'branch_name',
@@ -14,6 +14,6 @@ class branch extends Model
 
     public function barbers()
     {
-        return $this->hasMany(barber::class, 'id_branch');
+        return $this->hasMany(Barber::class, 'id_branch');
     }
 }
