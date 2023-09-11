@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>id</th>
                 <th>Nombre</th>
                 <th>Dirección</th>
                 <th>Teléfono</th>

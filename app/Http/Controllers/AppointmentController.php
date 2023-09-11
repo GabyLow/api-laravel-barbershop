@@ -26,17 +26,20 @@ class AppointmentController extends Controller
 
     // Vista para crear una nueva cita
     public function create()
-{
-    $clients = Client::all();
-    $branches = Branch::all();
-    $barbers = Barber::all();
-    $services = Service::all();
-    $drinks = Drink::all();
-    $music = Music::all();
-    $appointmentToEdit = null;
-
-    return view('appointment-form', compact('clients', 'branches', 'barbers', 'services', 'drinks', 'music', 'appointmentToEdit'));
-}
+    {
+        $clients = Client::all();
+        $branches = Branch::all();
+        $barbers = Barber::all();
+        $services = Service::all();
+        $drinks = Drink::all();
+        $music = Music::all();
+        $appointmentToEdit = null;
+    
+        // Obtener las citas existentes
+        $appointments = Appointment::all();
+    
+        return view('appointment-form', compact('clients', 'branches', 'barbers', 'services', 'drinks', 'music', 'appointmentToEdit', 'appointments'));
+    }
     
 
     // Procesar la solicitud de reserva de cita

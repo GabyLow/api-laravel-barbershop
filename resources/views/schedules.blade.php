@@ -3,8 +3,6 @@
 @section('content')
     <h1>Listado y Gestión de Horarios</h1>
 
-    <a class="btn btn-primary mb-3" href="{{ route('schedules.create') }}" role="button">Crear Horario</a>
-
     <table class="table">
         <thead>
             <tr>

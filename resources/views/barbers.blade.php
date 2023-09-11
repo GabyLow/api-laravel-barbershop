@@ -3,8 +3,6 @@
 @section('content')
     <h1>Listado y Gestión de Barberos</h1>
 
-    <a class="btn btn-primary mb-3" href="{{ route('barbers.create') }}" role="button">Crear Barbero</a>
-
     <table class="table">
         <thead>
             <tr>

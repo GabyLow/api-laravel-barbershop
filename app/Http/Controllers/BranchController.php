@@ -13,6 +13,11 @@ class BranchController extends Controller
         return view('branches', compact('branches'));
     }
 
+    public function create()
+    {
+        return view('branches', ['branch' => new Branch()]);
+    }
+
     public function store(Request $request)
     {
         // Validación de datos
@@ -24,9 +29,17 @@ class BranchController extends Controller
         ]);
 
         // Crear una nueva sucursal
-        $branch = Branch::create($request->all());
+        Branch::create($request->all());
 
-        return response()->json($branch, 201);
+        return redirect()->route('branches')->with('success', 'Sucursal creada con éxito');
+    }
+
+    public function edit($id)
+    {
+        // Busca la sucursal por ID
+        $branch = Branch::findOrFail($id);
+
+        return view('branches', ['branch' => $branch]);
     }
 
     public function update(Request $request, $id)
@@ -45,6 +58,15 @@ class BranchController extends Controller
         // Actualiza la sucursal con los datos proporcionados
         $branch->update($request->all());
 
-        return response()->json($branch, 200); // 200 OK
+        return redirect()->route('branches')->with('success', 'Sucursal actualizada con éxito');
+    }
+
+    public function destroy($id)
+    {
+        // Busca la sucursal por ID y elimínala
+        $branch = Branch::findOrFail($id);
+        $branch->delete();
+
+        return redirect()->route('branches')->with('success', 'Sucursal eliminada con éxito');
     }
 }

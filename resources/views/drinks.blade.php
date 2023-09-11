@@ -3,8 +3,6 @@
 @section('content')
     <h1>Listado y Gestión de Bebidas</h1>
 
-    <a class="btn btn-primary mb-3" href="{{ route('drinks.create') }}" role="button">Agregar Bebida</a>
-
     <table class="table">
         <thead>
             <tr>

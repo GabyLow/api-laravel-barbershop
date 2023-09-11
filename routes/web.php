@@ -18,6 +18,11 @@ Route::get('/', function () {
 Route::get('clients', [ClientController::class, 'index']);
 Route::resource('clients', ClientController::class);
 
+
+Route::get('/appointment-form', [AppointmentController::class, 'create'])->name('appointment-form');
+
+
+
 Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
 Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
 Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');

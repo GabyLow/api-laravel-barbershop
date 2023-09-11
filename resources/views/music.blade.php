@@ -3,8 +3,6 @@
 @section('content')
     <h1>Listado y Gestión de Música</h1>
 
-    <a class="btn btn-primary mb-3" href="{{ route('music.create') }}" role="button">Agregar Música</a>
-
     <table class="table">
         <thead>
             <tr>

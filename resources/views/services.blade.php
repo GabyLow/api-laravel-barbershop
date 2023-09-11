@@ -3,8 +3,6 @@
 @section('content')
     <h1>Listado y Gestión de Servicios</h1>
 
-    <a class="btn btn-primary mb-3" href="{{ route('services.create') }}" role="button">Crear Servicio</a>
-
     <table class="table">
         <thead>
             <tr>
