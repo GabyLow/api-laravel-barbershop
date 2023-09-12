@@ -47,16 +47,17 @@ Route::post('/music',[MusicController::class, 'store']);
 Route::put('/music/{id}',[MusicController::class, 'update']);
 Route::get('/music/all',[MusicController::class, 'showAll']);
 
-
 Route::get('/schedules/available-dates', [ScheduleController::class, 'getAvailableDates']); 
 Route::post('/schedule/create-appointment', [ScheduleController::class, 'createAppointment']); 
 Route::get('/schedules', [ScheduleController::class, 'index']);
+Route::post('/schedules', [ScheduleController::class, 'store']);
 Route::get('/schedules/{id}', [ScheduleController::class, 'show']); 
 Route::put('/schedules/{id}', [ScheduleController::class, 'update']); 
 Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']); 
 
 
 Route::get('/appointments', [AppointmentController::class, 'index']); 
+Route::post('/appointments', [AppointmentController::class, 'store']);
 Route::get('/appointments/{id}', [AppointmentController::class, 'show']); 
 Route::put('/appointments/{id}', [AppointmentController::class, 'update']); 
 Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']); 
