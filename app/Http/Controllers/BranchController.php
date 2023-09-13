@@ -7,66 +7,68 @@ use App\Models\Branch;
 
 class BranchController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $branches = Branch::all();
-        return view('branches', compact('branches'));
+
+        if ($request->wantsJson()) {
+            return response()->json($branches);
+        } else {
+            return view('branches', compact('branches'));
+        }
     }
 
     public function create()
     {
-        return view('branches', ['branch' => new Branch()]);
+        // Lógica para la vista de creación (front-end)
+        return view('branches');
     }
 
     public function store(Request $request)
     {
-        // Validación de datos
-        $request->validate([
+        // Lógica para almacenar datos en la base de datos (back-end)
+        $data = $request->validate([
             'branch_name' => 'required|string',
             'branch_address' => 'required|string',
             'branch_phone' => 'required|string',
-            
         ]);
 
-        // Crear una nueva sucursal
-        Branch::create($request->all());
+        Branch::create($data);
 
-        return redirect()->route('branches')->with('success', 'Sucursal creada con éxito');
+        return redirect()->route('branches');
     }
 
-    public function edit($id)
+    public function show(Branch $branch)
     {
-        // Busca la sucursal por ID
-        $branch = Branch::findOrFail($id);
-
-        return view('branches', ['branch' => $branch]);
+        // Lógica para mostrar una sucursal específica (puede ser tanto para front-end como para API)
+        return view('branches', compact('branch'));
     }
 
-    public function update(Request $request, $id)
+    public function edit(Branch $branch)
     {
-        // Validación de datos
-        $request->validate([
+        // Lógica para la vista de edición (front-end)
+        return view('branches', compact('branch'));
+    }
+
+    public function update(Request $request, Branch $branch)
+    {
+        // Lógica para actualizar datos en la base de datos (back-end)
+        $data = $request->validate([
             'branch_name' => 'required|string',
             'branch_address' => 'required|string',
             'branch_phone' => 'required|string',
-            
         ]);
 
-      
-        $branch = Branch::findOrFail($id);
+        $branch->update($data);
 
-       
-        $branch->update($request->all());
-
-        return redirect()->route('branches')->with('success', 'Sucursal actualizada con éxito');
+        return redirect()->route('branches');
     }
 
-    public function destroy($id)
+    public function destroy(Branch $branch)
     {
-        
-        $branch = Branch::findOrFail($id);
+        // Lógica para eliminar una sucursal (back-end)
         $branch->delete();
 
-        return redirect()->route('branches')->with('success', 'Sucursal eliminada con éxito');
+        return redirect()->route('branches');
     }
 }

@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
     protected $fillable = [
-        'client_id', 
-        'appointment_date', 
+        'client_id',  
         'barber_id', 
         'service_id', 
         'drink_id', 
-        'music_id'
+        'music_id',
+        'appointment_date'
     ];
 
     public function client()

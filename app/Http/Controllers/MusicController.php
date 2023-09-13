@@ -7,40 +7,65 @@ use App\Models\Music;
 
 class MusicController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $music = Music::all();
-        return view('music', compact('music'));
+
+        if ($request->wantsJson()) {
+            return response()->json($music);
+        } else {
+            return view('music', compact('music'));
+        }
+    }
+
+    public function create()
+    {
+        // Lógica para la vista de creación (front-end)
+        return view('music');
     }
 
     public function store(Request $request)
     {
-       
-        $request->validate([
+        // Lógica para almacenar datos en la base de datos (back-end)
+        $data = $request->validate([
             'music_genre' => 'required|string',
-           
         ]);
 
-       
-        $music = Music::create($request->all());
+        Music::create($data);
 
-        return response()->json($music, 201);
+        return redirect()->route('music');
     }
 
-    public function update(Request $request, $id)
+    public function show(Music $music)
     {
-        // Validación de datos
-        $request->validate([
+        // Lógica para mostrar un género musical específico (puede ser tanto para front-end como para API)
+        return view('music', compact('music'));
+    }
+
+    public function edit(Music $music)
+    {
+        // Lógica para la vista de edición (front-end)
+        return view('music', compact('music'));
+    }
+
+    public function update(Request $request, Music $music)
+    {
+        // Lógica para actualizar datos en la base de datos (back-end)
+        $data = $request->validate([
             'music_genre' => 'required|string',
-          
         ]);
 
-        
-        $music = Music::findOrFail($id);
+        $music->update($data);
 
-       
-        $music->update($request->all());
+        return redirect()->route('music');
+    }
 
-        return response()->json($music, 200);
+    public function destroy(Music $music)
+    {
+        // Lógica para eliminar un género musical (back-end)
+        $music->delete();
+
+        return redirect()->route('music');
     }
 }
+

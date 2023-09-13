@@ -7,22 +7,40 @@ use App\Models\Client;
 
 class ClientController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-       
         $clients = Client::all();
-        return view('clients.index', compact('clients'));
+
+        if ($request->wantsJson()) {
+            return response()->json($clients);
+        } else {
+            return view('clients', compact('clients'));
+        }
     }
 
     public function create()
     {
-       
+        // Lógica para la vista de creación (front-end en formato HTML)
         return view('clients.create');
+    }
+
+    public function createJson()
+    {
+        // Lógica para la creación y respuesta en formato JSON
+        $newClient = Client::create([
+            'client_name' => 'Nuevo Cliente',
+            'client_birthday' => '1990-01-01',
+            'client_phone' => '123-456-7890',
+            'client_email' => 'nuevo@cliente.com',
+            'status' => 'activo',
+        ]);
+
+        return response()->json($newClient);
     }
 
     public function store(Request $request)
     {
-        
+        // Lógica para almacenar datos en la base de datos (back-end)
         $data = $request->validate([
             'client_name' => 'required|string',
             'client_birthday' => 'required|date',
@@ -33,43 +51,23 @@ class ClientController extends Controller
 
         Client::create($data);
 
-        return redirect()->route('clients.index');
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Cliente creado con éxito']);
+        } else {
+            return view('clients');
+        }
     }
 
-    public function show(Client $client)
+    public function show(Client $client, Request $request)
     {
-       
-        return view('clients.show', compact('client'));
+        // Lógica para mostrar un cliente específico (puede ser tanto para front-end como para API)
+        if ($request->expectsJson()) {
+            return response()->json($client);
+        } else {
+            return view('clients.show', compact('client'));
+        }
     }
 
-    public function edit(Client $client)
-    {
-        
-        return view('clients.edit', compact('client'));
-    }
-
-    public function update(Request $request, Client $client)
-    {
-        
-        $data = $request->validate([
-            'client_name' => 'required|string',
-            'client_birthday' => 'required|date',
-            'client_phone' => 'required|string',
-            'client_email' => 'required|email|unique:clients,client_email,' . $client->id,
-            'status' => 'nullable|string',
-        ]);
-
-        $client->update($data);
-
-        return redirect()->route('clients.index');
-    }
-
-    public function destroy(Client $client)
-    {
-      
-        $client->delete();
-
-        return redirect()->route('clients.index');
-    }
 }
+
 

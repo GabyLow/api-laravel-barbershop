@@ -2,34 +2,54 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
+use App\Models\Appointment;
 use App\Models\Client;
 use App\Models\Branch;
 use App\Models\Barber;
 use App\Models\Service;
 use App\Models\Drink;
 use App\Models\Music;
-use App\Models\Appointment;
 use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
-    public function create()
+    public function index(Request $request)
+    {
+        $appointments = Appointment::all();
+
+        if ($request->wantsJson()) {
+            return response()->json($appointments);
+        } else {
+            return view('appointments', compact('appointments'));
+        }
+    }
+
+    public function create(Request $request)
     {
         $clients = Client::all();
         $branches = Branch::all();
         $barbers = Barber::all();
-    
         $services = Service::all();
         $drinks = Drink::all();
         $music = Music::all();
         $appointmentToEdit = null;
-    
-        return view('appointment-form', compact('clients', 'branches', 'barbers', 'services', 'drinks', 'music', 'appointmentToEdit'));
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'clients' => $clients,
+                'branches' => $branches,
+                'barbers' => $barbers,
+                'services' => $services,
+                'drinks' => $drinks,
+                'music' => $music,
+                'appointmentToEdit' => $appointmentToEdit,
+            ]);
+        } else {
+            return view('appointments', compact('clients', 'branches', 'barbers', 'services', 'drinks', 'music', 'appointmentToEdit'));
+        }
     }
-    
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -41,44 +61,68 @@ class AppointmentController extends Controller
             'services' => 'required|array|min:1',
             'drink_id' => 'required|exists:drinks,id',
             'music_id' => 'required|exists:music,id',
-
-            dd($request->all()),
         ]);
-    
+
         $selectedServices = Service::whereIn('id', $request->services)->get();
         $totalDuration = $selectedServices->sum('service_duration');
         $totalCost = $selectedServices->sum('service_price');
 
-        // Obtener la hora seleccionada en el formulario
-    $selectedTime = $request->selected_time;
+        $selectedTime = $request->selected_time;
 
-    // Calcular el end_time sumando la duración total de los servicios
-    $endDateTime = Carbon::parse($request->appointment_date . ' ' . $selectedTime)
-        ->addMinutes($totalDuration);
-    
+        $endDateTime = Carbon::parse($request->appointment_date . ' ' . $selectedTime)->addMinutes($totalDuration);
+
         $appointment = new Appointment([
             'client_id' => $request->client_id,
-            'branch_id' => $request->branch_id, 
+            'branch_id' => $request->branch_id,
             'barber_id' => $request->barber_id,
-            'service_id' => $request->services[0], 
+            'service_id' => $request->services[0],
             'drink_id' => $request->drink_id,
             'music_id' => $request->music_id,
             'start_time' => $request->appointment_date . ' ' . $request->selected_time,
-            'end_time' => Carbon::parse($request->appointment_date . ' ' . $request->selected_time)->addMinutes($totalDuration),
+            'end_time' => $endDateTime,
             'duration' => $totalDuration,
             'total_cost' => $totalCost,
             'status' => 'pending',
-
         ]);
-
-        
 
         if ($appointment->save()) {
             $appointment->services()->attach($request->services);
-            return redirect()->route('appointment-form')->with('success', 'Cita registrada con éxito');
+            return redirect()->route('appointments')->with('success', 'Cita registrada con éxito');
         } else {
-            return redirect()->route('appointment-form')->with('error', 'Error al guardar la cita');
+            return redirect()->route('appointments')->with('error', 'Error al guardar la cita');
         }
+    }
 
-}
+    public function show(Request $request, Appointment $appointment)
+    {
+        if ($request->wantsJson()) {
+            return response()->json(['data' => $appointment]);
+        } else {
+            return view('appointments', compact('appointment'));
+        }
+    }
+    
+
+    public function edit(Appointment $appointment)
+    {
+        $clients = Client::all();
+        $branches = Branch::all();
+        $barbers = Barber::all();
+        $services = Service::all();
+        $drinks = Drink::all();
+        $music = Music::all();
+        $appointmentToEdit = $appointment;
+
+        return view('appointments', compact('clients', 'branches', 'barbers', 'services', 'drinks', 'music', 'appointmentToEdit'));
+    }
+
+    public function update(Request $request, Appointment $appointment)
+    {
+        // Lógica para actualizar la cita (back-end)
+    }
+
+    public function destroy(Appointment $appointment)
+    {
+        // Lógica para eliminar la cita (back-end)
+    }
 }

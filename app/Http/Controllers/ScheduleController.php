@@ -4,67 +4,78 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Schedule;
-use App\Models\Barber;
-use App\Models\Branch;
-use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $schedules = Schedule::all();
-        $branches = Branch::all();
-        $barbers = Barber::all();
 
-        return view('schedules', compact('schedules', 'branches', 'barbers'));
+        if ($request->wantsJson()) {
+            return response()->json($schedules);
+        } else {
+            return view('schedules', compact('schedules'));
+        }
     }
 
-
-
-
-    public function getAvailableDates(Request $request)
+    public function create()
     {
+        // Lógica para la vista de creación (front-end)
+        return view('schedules');
+    }
 
-        $request->validate([
+    public function store(Request $request)
+    {
+        // Lógica para almacenar datos en la base de datos (back-end)
+        $data = $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'barber_id' => 'required|exists:barbers,id',
+            'schedule_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'is_available' => 'nullable|boolean',
         ]);
 
+        Schedule::create($data);
 
-        $branchId = $request->input('branch_id');
-        $barberId = $request->input('barber_id');
-
-        $availableDatesAndTimes = $this->calculateAvailableDatesAndTimes($branchId, $barberId);
-
-        return response()->json(['available_dates_and_times' => $availableDatesAndTimes], 200);
+        return redirect()->route('schedules');
     }
 
-    private function calculateAvailableDatesAndTimes($branchId, $barberId)
+    public function show(Schedule $schedule)
     {
-
-        $currentDate = Carbon::now();
-
-
-        $availableDatesAndTimes = [];
-
-
-        for ($i = 0; $i < 7; $i++) {
-
-            $date = $currentDate->addDays($i)->format('Y-m-d');
-
-
-            $availableTimes = $this->getAvailableTimesForDate($branchId, $barberId, $date);
-
-
-            $availableDatesAndTimes[$date] = $availableTimes;
-        }
-
-        return $availableDatesAndTimes;
+        // Lógica para mostrar un horario específico (puede ser tanto para front-end como para API)
+        return view('schedules', compact('schedule'));
     }
 
-    private function getAvailableTimesForDate($branchId, $barberId, $date)
+    public function edit(Schedule $schedule)
     {
+        // Lógica para la vista de edición (front-end)
+        return view('schedules', compact('schedule'));
+    }
 
-        return [];
+    public function update(Request $request, Schedule $schedule)
+    {
+        // Lógica para actualizar datos en la base de datos (back-end)
+        $data = $request->validate([
+            'branch_id' => 'required|exists:branches,id',
+            'barber_id' => 'required|exists:barbers,id',
+            'schedule_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'is_available' => 'nullable|boolean',
+        ]);
+
+        $schedule->update($data);
+
+        return redirect()->route('schedules');
+    }
+
+    public function destroy(Schedule $schedule)
+    {
+        // Lógica para eliminar un horario (back-end)
+        $schedule->delete();
+
+        return redirect()->route('schedules');
     }
 }
+

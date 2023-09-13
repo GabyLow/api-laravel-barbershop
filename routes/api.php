@@ -1,63 +1,49 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BarberController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\DrinkController;
 use App\Http\Controllers\MusicController;
-use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\AppointmentController;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+// Rutas para el controlador de clientes
+Route::get('/clients', [ClientController::class, 'index']);
+Route::get('/clients/{id}', [ClientController::class, 'show']);
+Route::post('/clients', [ClientController::class, 'store']);
+Route::put('/clients/{id}', [ClientController::class, 'update']);
+Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
 
+// Rutas para el controlador de sucursales
+Route::get('/branches', [BranchController::class, 'index']);
+Route::get('/branches/{id}', [BranchController::class, 'show']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Rutas para el controlador de barberos
+Route::get('/barbers', [BarberController::class, 'index']);
+Route::get('/barbers/{id}', [BarberController::class, 'show']);
 
-Route::get('/clients',[ClientController::class, 'index']);
-Route::post('/clients',[ClientController::class, 'store']);
-Route::put('/clients/{id}',[ClientController::class, 'update']);
-Route::get('/clients/all',[ClientController::class, 'showAll']);
+// Rutas para el controlador de servicios
+Route::get('/services', [ServiceController::class, 'index']);
+Route::get('/services/{id}', [ServiceController::class, 'show']);
 
-Route::get('/branches',[BranchController::class, 'index']);
-Route::post('/branches',[BranchController::class, 'store']);
-Route::put('/branches/{id}',[BranchController::class, 'update']);
-Route::get('/branches/all',[BranchController::class, 'showAll']);
-
-Route::get('/barbers',[BarberController::class, 'index']);
-Route::post('/barbers',[BarberController::class, 'store']);
-Route::put('/barbers/{id}',[BarberController::class, 'update']);
-Route::get('/barbers/all',[BarberController::class, 'showAll']);
-
-Route::get('/services',[ServiceController::class, 'index']);
-Route::post('/services',[ServiceController::class, 'store']);
-Route::put('/services/{id}',[ServiceController::class, 'update']);
-Route::get('/services/all',[ServiceController::class, 'showAll']);
-
-Route::get('/drinks',[DrinkController::class, 'index']);
-Route::post('/drinks',[DrinkController::class, 'store']);
-Route::put('/drinks/{id}',[DrinkController::class, 'update']);
-Route::get('/drinks/all',[DrinkController::class, 'showAll']);
-
-Route::get('/music',[MusicController::class, 'index']);
-Route::post('/music',[MusicController::class, 'store']);
-Route::put('/music/{id}',[MusicController::class, 'update']);
-Route::get('/music/all',[MusicController::class, 'showAll']);
-
-Route::get('/schedules/available-dates', [ScheduleController::class, 'getAvailableDates']); 
-Route::post('/schedule/create-appointment', [ScheduleController::class, 'createAppointment']); 
+// Rutas para el controlador de horarios
 Route::get('/schedules', [ScheduleController::class, 'index']);
-Route::post('/schedules', [ScheduleController::class, 'store']);
-Route::get('/schedules/{id}', [ScheduleController::class, 'show']); 
-Route::put('/schedules/{id}', [ScheduleController::class, 'update']); 
-Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']); 
+Route::get('/schedules/{id}', [ScheduleController::class, 'show']);
 
+// Rutas para el controlador de bebidas
+Route::get('/drinks', [DrinkController::class, 'index']);
+Route::get('/drinks/{id}', [DrinkController::class, 'show']);
 
-Route::get('/appointments', [AppointmentController::class, 'index']); 
+// Rutas para el controlador de música
+Route::get('/music', [MusicController::class, 'index']);
+Route::get('/music/{id}', [MusicController::class, 'show']);
+
+// Rutas para el controlador de citas
+Route::get('/appointments', [AppointmentController::class, 'index']);
+Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
 Route::post('/appointments', [AppointmentController::class, 'store']);
-Route::get('/appointments/{id}', [AppointmentController::class, 'show']); 
-Route::put('/appointments/{id}', [AppointmentController::class, 'update']); 
-Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']); 
+Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
+Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);

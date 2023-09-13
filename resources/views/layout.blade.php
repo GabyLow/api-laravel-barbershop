@@ -46,7 +46,7 @@
                         <a class="nav-link" href="{{ route('music.index') }}">Música</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('appointment-form') }}">Reservar Cita</a>
+                        <a class="nav-link" href="{{ route('appointments.index') }}">Reservar Cita</a>
                     </li>
                 </ul>
             </div>
